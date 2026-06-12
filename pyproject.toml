@@ -3,7 +3,7 @@ name = "legalassistant"
 version = "0.1.0"
 description = "LegalAssistant using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
-requires-python = ">=3.10,<3.14"
+requires-python = ">=3.10,<3.15"
 dependencies = [
     "crewai[litellm,tools]>=0.102.0",
     "fastapi>=0.136.3",
