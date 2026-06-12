@@ -1,0 +1,77 @@
+case_intake_task:
+  description: >
+    The user has submitted the following legal query:
+
+    {user_input}
+
+    Your job is to interpret it, identify the core legal issue,
+    classify the legal domain and return structured JSON.
+
+  expected_output: >
+    JSON containing:
+    case_type,
+    legal_domain,
+    summary,
+    relevant_entities,
+    jurisdiction
+
+  agent: case_intake_agent
+
+
+ipc_section_task:
+  description: >
+    You are provided with the structured legal context generated
+    from the previous task.
+
+    Identify the top 3 most relevant IPC sections.
+
+    Return:
+    section,
+    section_title,
+    chapter,
+    chapter_title,
+    content
+
+  expected_output: >
+    JSON array of IPC sections.
+
+  agent: ipc_section_agent
+
+  context:
+    - case_intake_task
+
+legal_precedent_task:
+  description: >
+    Search for relevant Indian legal precedents using the
+    Legal Precedent Search Tool.
+
+    IMPORTANT:
+    - Use ONLY the cases returned by the tool.
+    - Do NOT invent or fabricate case names.
+    - If no cases are found, explicitly state:
+      "No relevant legal precedents were found."
+    - Include case title, summary and relevance.
+
+  expected_output: >
+    A paragraph summarizing only the precedent cases
+    returned by the tool.
+
+  agent: legal_precedent_agent
+
+  context:
+    - case_intake_task
+  
+legal_drafter_task:
+  description: >
+    Based on the legal case summary, IPC sections,
+    and precedents, draft a formal legal document.
+
+  expected_output: >
+    Formal legal complaint or notice.
+
+  agent: legal_drafter_agent
+
+  context:
+    - case_intake_task
+    - ipc_section_task
+    - legal_precedent_task
